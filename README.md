@@ -1,16 +1,14 @@
-# flutter_weather
+# flutter Weather
 
-A new Flutter project.
+References: [Bloc official website tutorial](https://bloclibrary.dev/tutorials/flutter-weather/)
 
-## Getting Started
+## Introduction
 
-This project is a starting point for a Flutter application.
+This project is developed based on a course from the Bloc official website, primarily focusing on creating a Weather app.
 
-A few resources to get you started if this is your first Flutter project:
+## Purpose
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+My main goals are:
+- Learn Flutter for cross-platform app development.
+- Implement Bloc pattern for state management.
+- Integrate API calls to fetch data from GitHub's public API.
