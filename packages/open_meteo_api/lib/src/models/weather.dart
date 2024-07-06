@@ -1,9 +1,9 @@
 class Weather {
   final double temperature;
-  final double weathercode;
+  final double weatherCode;
 
   Weather({
     required this.temperature,
-    required this.weathercode,
+    required this.weatherCode,
   });
 }
