@@ -19,19 +19,19 @@ extension TemperatureUnitsX on TemperatureUnits {
 @JsonSerializable()
 class Weather extends Equatable {
   final WeatherCondition condition;
-  final DateTime lateUpdated;
+  final DateTime lastUpdated;
   final String location;
   final Temperature temperature;
 
   const Weather({
     required this.condition,
-    required this.lateUpdated,
+    required this.lastUpdated,
     required this.location,
     required this.temperature,
   });
 
   @override
-  List<Object> get props => [condition, lateUpdated, location, temperature];
+  List<Object> get props => [condition, lastUpdated, location, temperature];
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return _$WeatherFromJson(json);
@@ -44,7 +44,7 @@ class Weather extends Equatable {
   factory Weather.fromRepository(weather_repository.Weather weather) {
     return Weather(
       condition: weather.condition,
-      lateUpdated: DateTime.now(),
+      lastUpdated: DateTime.now(),
       location: weather.location,
       temperature: Temperature(value: weather.temperature),
     );
@@ -52,20 +52,20 @@ class Weather extends Equatable {
 
   static final empty = Weather(
     condition: WeatherCondition.unknown,
-    lateUpdated: DateTime(0),
+    lastUpdated: DateTime(0),
     location: '--',
     temperature: const Temperature(value: 0),
   );
 
   Weather copyWith({
     WeatherCondition? condition,
-    DateTime? lateUpdated,
+    DateTime? lastUpdated,
     String? location,
     Temperature? temperature,
   }) {
     return Weather(
       condition: condition ?? this.condition,
-      lateUpdated: lateUpdated ?? this.lateUpdated,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
       location: location ?? this.location,
       temperature: temperature ?? this.temperature,
     );

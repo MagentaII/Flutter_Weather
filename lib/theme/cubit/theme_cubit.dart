@@ -20,7 +20,7 @@ class ThemeCubit extends HydratedCubit<Color> {
   }
 
   @override
-  Map<String, dynamic>? toJson(Color state) {
+  Map<String, dynamic> toJson(Color state) {
     return <String, String>{'color': '${state.value}'};
   }
 }
