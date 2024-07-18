@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_weather/search/view/search_page.dart';
 import 'package:flutter_weather/settings/view/settings_page.dart';
 import 'package:flutter_weather/theme/cubit/theme_cubit.dart';
 import 'package:flutter_weather/weather/cubit/weather_cubit.dart';
@@ -28,32 +29,33 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('This is Weather Page'),
         actions: [
           IconButton(
-              onPressed: (){
-                print('Navigation from WeatherPage to SettingsPage at ${DateTime.now()}');
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.settings)
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              print(
+                'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}',
+              );
+              Navigator.of(context).push(
+                SettingsPage.route(context.read<WeatherCubit>()),
+              );
+            },
           )
         ],
       ),
       body: Center(
-        child: BlocConsumer<WeatherCubit, WeatherState> (
+        child: BlocConsumer<WeatherCubit, WeatherState>(
           listener: (context, state) {
             if (state.status.isSuccess) {
               context.read<ThemeCubit>().updateTheme(state.weather);
             }
           },
           builder: (context, state) {
-            switch(state.status) {
+            switch (state.status) {
               case WeatherStatus.initial:
                 return const Text('WeatherEmpty');
               case WeatherStatus.loading:
@@ -67,6 +69,17 @@ class _WeatherViewState extends State<WeatherView> {
             }
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.search,
+          semanticLabel: 'Search',
+        ),
+        onPressed: () async {
+          Navigator.of(context).push(
+            SearchPage.route()
+          );
+        },
       ),
     );
   }

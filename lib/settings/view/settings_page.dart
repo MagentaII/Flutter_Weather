@@ -1,60 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_weather/weather/cubit/weather_cubit.dart';
-import 'package:flutter_weather/weather/view/weather_page.dart';
-import 'package:weather_repository/weather_repository.dart';
+import 'package:flutter_weather/weather/models/models.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  const SettingsPage._();
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WeatherCubit(context.read<WeatherRepository>()),
-      child: const SettingsView(),
+  static Route<void> route(WeatherCubit weatherCubit) {
+    return MaterialPageRoute(
+      builder: (_) => BlocProvider.value(
+        value: weatherCubit,
+        child: const SettingsPage._(),
+      ),
     );
   }
-}
 
-class SettingsView extends StatefulWidget {
-  const SettingsView({super.key});
-
-  @override
-  State<SettingsView> createState() => _SettingsViewState();
-}
-
-class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('This is Settings Page'),
-        actions: [
-          IconButton(
-              onPressed: (){
-                print('Navigation from SettingsPage to WeatherPage at ${DateTime.now()}');
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const WeatherPage(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.cloud_outlined)
-          )
+      appBar: AppBar(title: const Text('Settings')),
+      body: ListView(
+        children: <Widget>[
+          BlocBuilder<WeatherCubit, WeatherState>(
+            buildWhen: (previous, current) =>
+                previous.temperatureUnits != current.temperatureUnits,
+            builder: (context, state) {
+              return ListTile(
+                title: const Text('Temperature Units'),
+                isThreeLine: true,
+                subtitle: const Text(
+                    'Use metric measurements for temperature units.'),
+                trailing: Switch(
+                  value: state.temperatureUnits.isCelsius,
+                  onChanged: (_) => context.read<WeatherCubit>().toggleUnits,
+                ),
+              );
+            },
+          ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'This is Settings View',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
