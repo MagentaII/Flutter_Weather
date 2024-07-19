@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SearchPage extends StatefulWidget {
   const SearchPage._();
 
-  static Route<void> route() {
+  static Route<String> route() {
     return MaterialPageRoute(
       builder: (_) => const SearchPage._(),
     );

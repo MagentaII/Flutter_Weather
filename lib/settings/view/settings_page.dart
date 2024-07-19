@@ -7,7 +7,7 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage._();
 
   static Route<void> route(WeatherCubit weatherCubit) {
-    return MaterialPageRoute(
+    return MaterialPageRoute<void>(
       builder: (_) => BlocProvider.value(
         value: weatherCubit,
         child: const SettingsPage._(),
@@ -32,7 +32,7 @@ class SettingsPage extends StatelessWidget {
                     'Use metric measurements for temperature units.'),
                 trailing: Switch(
                   value: state.temperatureUnits.isCelsius,
-                  onChanged: (_) => context.read<WeatherCubit>().toggleUnits,
+                  onChanged: (_) => context.read<WeatherCubit>().toggleUnits(),
                 ),
               );
             },

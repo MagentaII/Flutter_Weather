@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_weather/search/view/search_page.dart';
 import 'package:flutter_weather/settings/view/settings_page.dart';
 import 'package:flutter_weather/theme/cubit/theme_cubit.dart';
 import 'package:flutter_weather/weather/cubit/weather_cubit.dart';
+import 'package:flutter_weather/weather/widgets/widgets.dart';
 import 'package:weather_repository/weather_repository.dart';
 
 class WeatherPage extends StatelessWidget {
@@ -31,15 +33,14 @@ class _WeatherViewState extends State<WeatherView> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('This is Weather Page'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              print(
-                'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}',
-              );
+              if (kDebugMode) {
+                print(
+                    'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}');
+              }
               Navigator.of(context).push(
                 SettingsPage.route(context.read<WeatherCubit>()),
               );
@@ -57,28 +58,31 @@ class _WeatherViewState extends State<WeatherView> {
           builder: (context, state) {
             switch (state.status) {
               case WeatherStatus.initial:
-                return const Text('WeatherEmpty');
+                return const WeatherEmpty();
               case WeatherStatus.loading:
-                return const Text('WeatherLoading');
+                return const WeatherLoading();
               case WeatherStatus.success:
-                return const Text('WeatherPopulated');
+                return WeatherPopulated(
+                  weather: state.weather,
+                  units: state.temperatureUnits,
+                  onRefresh: () {
+                    return context.read<WeatherCubit>().refreshWeather();
+                  },
+                );
               case WeatherStatus.failure:
-                return const Text('WeatherError');
+                return const WeatherError();
               default:
-                return const Text('Unknown state');
+                return const WeatherError();
             }
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.search,
-          semanticLabel: 'Search',
-        ),
+        child: const Icon(Icons.search, semanticLabel: 'Search'),
         onPressed: () async {
-          Navigator.of(context).push(
-            SearchPage.route()
-          );
+          final city = await Navigator.of(context).push(SearchPage.route());
+          if (!context.mounted) return;
+          await context.read<WeatherCubit>().fetchWeather(city);
         },
       ),
     );
